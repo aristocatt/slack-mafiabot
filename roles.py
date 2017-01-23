@@ -12,7 +12,8 @@ class Vanilla(object):
         self.day_actions = {'!vote': self.vote}
         self.night_actions = {}
         self.resolve = None
-
+    def get_role(self):
+        return self.role
     def get_actions(self, **kwargs):
         '''Kwargs is used to get actions because other roles like role cop may be day/night
         cycle irrelevant, this makes it explicit.  If cycle is being passed, it is checking
@@ -42,11 +43,13 @@ class Mafia(Vanilla):
 
     def __init__(self):
         Vanilla.__init__(self, 'mafia')
+        self.role = 'Mafia'
         self.night_actions['!kill'] = self.kill
 
     def kill(self, target):
+        return target
         #if called updates game...needs to be queued
-        pass
+
 
 
 

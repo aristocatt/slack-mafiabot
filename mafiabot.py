@@ -6,7 +6,7 @@ from gameaction import handle_action
 from game import GameHandler
 
 
-BOT_ID = 'U3RC29X0A'
+BOT_ID = 'id goes here'
 
 #Constants
 AT_BOT = "<@" + BOT_ID + ">"
@@ -23,14 +23,13 @@ Lobby = GameLobby()
 id_name_hash = {}
 
 #instantiate slack and twilio
-slack_client = SlackClient("xoxb-127410337010-MOwjbYIDCqhKM9xxIKRq1VL8")
+slack_client = SlackClient("xoxp-127494970309-126729036129-130875317698-323e2f2e3f8672853d2bc36ddbadfefb")
 user_list = slack_client.api_call('users.list')
 
 #displays message to channel or user, or later on to a private mafia channel
 def message(response, channel = None):
     if channel:
-        print(channel)
-        slack_client.api_call("chat.postMessage", channel=channel,
+        slack_client.api_call("chat.postMessage", channel='@'+channel,
                               text=response, as_user=False)
     else:
         slack_client.api_call("chat.postMessage", channel='C3RE8JRT6',
@@ -47,8 +46,15 @@ def game_exists(Lobby):
         time.sleep(2)
         state = Lobby.get_game_state()
         Game = begin_game(Lobby)
+        lobby = Lobby.get_lobby()
         players = ', '.join('{}'.format(key) for key in Lobby.get_lobby().keys())
         print(players)
+        for x in lobby:
+            print(x)
+            role = lobby[x].role
+            print(role)
+
+            message("Welcome you are" + role +'you know what to do', x)
         Lobby.set_game_state(4)
         message("Game is beginning Players: " + players)
         return Game
@@ -61,8 +67,9 @@ def game_exists(Lobby):
         print("Game state makes no sense, it is currently at: ", Lobby.get_game_state())
         return None
 
+
 #just a place holder for in game commands that do not actually affect the Game or Lobby classes
-def handle_basic(command,user_name):
+def handle_basic(command ,user_name):
     if command.startswith(helpme):
         message("I am working on this.",user_name)
     elif command.startswith(get_tally):
@@ -117,11 +124,31 @@ def parse_slack_output(slack_rtm_output):
     output_list = slack_rtm_output
     if output_list and len(output_list) > 0:
         for output in output_list:
-            if output and 'text' in output and AT_BOT in output['text']:
+
+            if output and 'text' in output and '!' in output['text'][0]:
                 # return text after the @ mention, whitespace removed
-                return output['text'].split(AT_BOT)[1].strip().lower(), \
+                return output['text'].lower(), \
                        output['channel'], output['user']
+
     return None, None, None
+
+def check_game(Lobby):
+    players = Lobby.get_lobby()
+    town = 0
+    mafia = 0
+    for x in players:
+        if players[x].alliance == "town":
+            town += 1
+        elif players[x].alliance == "mafia":
+            mafia += 1
+
+    if mafia >= town:
+        return "Mafia"
+    elif mafia == 0:
+        return "Town"
+    else:
+        return None
+
 
 
 if __name__ == "__main__":
@@ -132,17 +159,28 @@ if __name__ == "__main__":
             if Lobby.get_game_state() == 4:
                 if Game.check_cycle() == 1:
                     if Game.period == False:
-                        message("It is now day time the result of the night actions were: ")
+                        kill = Game.resolve_action()
+                        message("It is now day time the result of the night actions were: \n")
+                        message(kill + 'is dead')
+                        if kill in Lobby.get_lobby():
+                            Lobby.remove_player(kill)
                     elif Game.period == True:
                         response, lynch = Game.resolve_lynch()
                         message(response)
                         message("The town got together and voted. " + lynch +
-                                " was lynched.  It is now night")
+                                " was lynched.")
                         if lynch in Lobby.get_lobby():
                             Lobby.remove_player(lynch)
                     else: message("Houston we have a problem")
+                    winner = check_game(Lobby)
+                    if winner in ('Town','Mafia'):
+                        message("Congradulation:" + winner + "you have won.  Gamestate is resetting")
+                        Lobby.clear_lobby()
+
                     Game.set_cycle(not Game.period)
                     time.sleep(1)
+                    if Lobby.get_game_state() == 0:
+                        del Game
 
             command, channel, user_id = parse_slack_output(slack_client.rtm_read())
             if command and channel and user_id and Lobby.get_game_state() in (0, 1, 2):
@@ -162,7 +200,7 @@ if __name__ == "__main__":
                 id_hash = Lobby.get_hash()
                 if user_id in id_hash:
                     user_name = id_hash[user_id]
-                    if command.startswith(helpme, get_tally):
+                    if command.startswith((helpme, get_tally)):
                         handle_basic(command,user_name)
 
                     else:

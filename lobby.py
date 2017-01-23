@@ -29,6 +29,8 @@ class GameLobby:
 
     def clear_lobby(self):
         self.game_lobby = {}
+        self.id_user_hash = {}
+        self.game_state = 0
         print('lobby_cleared')
 
     def get_lobby(self):

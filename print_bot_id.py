@@ -1,6 +1,6 @@
 from slackclient import SlackClient
 
-SLACK_BOT_TOKEN = "xoxb-127410337010-MOwjbYIDCqhKM9xxIKRq1VL8"
+SLACK_BOT_TOKEN = 'token goes here'
 
 BOT_NAME = 'mafiabot'
 

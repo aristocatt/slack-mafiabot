@@ -15,7 +15,7 @@ class GameHandler:
 
     def __init__(self, ord_of_op):
         self.period = True
-        self.countdown = time.time() + 20
+        self.countdown = time.time() + 30
         self.ord_of_op = ord_of_op
         self.vote = {}
         self.resolve = {
@@ -26,9 +26,9 @@ class GameHandler:
     def set_cycle(self, cycle):
         self.period = cycle
         if cycle == True:
-            self.countdown = time.time() + 20
+            self.countdown = time.time() + 60 * 3
         elif cycle == False:
-            self.countdown = time.time() + 10
+            self.countdown = time.time() + 60
 
     def check_cycle(self):
         if time.time() > self.countdown:
@@ -66,11 +66,14 @@ class GameHandler:
         self.reset_votes()
         return tally, lynch_final
 
-    def queue_action(self,user,command, players):
+    def queue_action(self,user, command, players, action):
         order = self.ord_of_op.index(command[0])
         target = command.pop(0)
-        self.resolve[order] = {user, command[0], target}
+        self.resolve[order] = [user, command[0], target, action]
         print(self.resolve)
+
+    def clear_queue(self):
+        self.resolve = {}
 
     def resolve_action(self):
         resolve = sorted(self.resolve.items(), key = lambda y: y[0])
@@ -80,10 +83,16 @@ class GameHandler:
         prevented_from = {
             #player: True or (tuple of strings)
         }
-        for x in resolve.items():
-            if prevented_from[x[1][0]] == True:
-                pass
-            else:
-                x[1][1]
+        for x in resolve:
+            user = x[1][0]
+            action = user.night_actions
+            print(action)
+            command = x[1][2]
+            print(command)
+            target = x[1][1]
+            print(target)
+            kill = action[command](target)
+            return kill
+
 
 

@@ -21,7 +21,7 @@ setups = [{
         'size': 1,
         'resolve': ['!kill'],
         'roles': [
-            Vanilla()
+            Mafia()
         ]
     },
     {
@@ -29,6 +29,15 @@ setups = [{
         'size': 3,
         'resolve': ['!kill'],
         'roles':[
+            Mafia()
+        ]
+    },
+
+    {
+        'name': 'test4',
+        'size': 2,
+        'resolve': ['!kill'],
+        'roles': [
             Mafia()
         ]
     }]
@@ -52,13 +61,14 @@ def prepare_game(setup, Lobby):
         players[shuffle[0]] = x
         shuffle.pop(0)
     Lobby.update_players(players)
+    print(Lobby.get_lobby())
 
 #create the game state
 def begin_game(Lobby):
     players = Lobby.get_lobby()
     setup = select_setup(len(players))
     prepare_game(setup, Lobby)
-    print(setup['resolve'])
+
     Game = GameHandler(setup['resolve'])
     return Game
 
