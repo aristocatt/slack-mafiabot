@@ -28,11 +28,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="mafiabot.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="mafiabot.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mafiabot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="554">
-              <caret line="118" column="240" selection-start-line="118" selection-start-column="240" selection-end-line="118" selection-end-column="240" />
+            <state relative-caret-position="217">
+              <caret line="26" column="42" selection-start-line="26" selection-start-column="42" selection-end-line="26" selection-end-column="42" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -94,10 +94,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="roles.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="roles.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/roles.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1182">
+            <state relative-caret-position="1452">
               <caret line="66" column="12" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="12" />
               <folding>
                 <marker date="1485537980218" expanded="true" signature="317:646" placeholder="..." />
@@ -141,8 +141,8 @@
         <option value="$PROJECT_DIR$/gameaction.py" />
         <option value="$PROJECT_DIR$/gamesetups.py" />
         <option value="$PROJECT_DIR$/game.py" />
-        <option value="$PROJECT_DIR$/mafiabot.py" />
         <option value="$PROJECT_DIR$/roles.py" />
+        <option value="$PROJECT_DIR$/mafiabot.py" />
       </list>
     </option>
   </component>
@@ -1032,22 +1032,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mafiabot.py">
+    <entry file="file://$PROJECT_DIR$/roles.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="554">
-          <caret line="118" column="240" selection-start-line="118" selection-start-column="240" selection-end-line="118" selection-end-column="240" />
+        <state relative-caret-position="1452">
+          <caret line="66" column="12" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="12" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <marker date="1485537980218" expanded="true" signature="317:646" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/roles.py">
+    <entry file="file://$PROJECT_DIR$/mafiabot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1182">
-          <caret line="66" column="12" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="12" />
+        <state relative-caret-position="217">
+          <caret line="26" column="42" selection-start-line="26" selection-start-column="42" selection-end-line="26" selection-end-column="42" />
           <folding>
-            <marker date="1485537980218" expanded="true" signature="317:646" placeholder="..." />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
