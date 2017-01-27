@@ -6,7 +6,7 @@ from gameaction import handle_action
 from game import GameHandler
 
 
-BOT_ID = 'add Bot ID here
+BOT_ID = 'bot id goes here'
 
 #Constants
 AT_BOT = "<@" + BOT_ID + ">"
@@ -24,7 +24,7 @@ Lobby = GameLobby()
 id_name_hash = {}
 
 #instantiate slack and twilio
-slack_client = SlackClient("add token here")
+slack_client = SlackClient("token goes here")
 user_list = slack_client.api_call('users.list')
 
 #displays message to channel or user, or later on to a private mafia channel

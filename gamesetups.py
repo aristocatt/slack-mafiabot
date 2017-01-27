@@ -10,7 +10,8 @@ basically just sets up a mountainous game and assigns Mafia Roles based on the n
 of players'''
 setups = [{
     'name': 'test',
-    'size': 1,
+    'minsize': 1,
+    'maxsize': 1,
     'resolve': ['!kill'],
     'roles': [
         Mafia()
@@ -18,26 +19,31 @@ setups = [{
 },
     {
         'name':'test2',
-        'size': 1,
+        'minsize': 1,
+        'maxsize': 1,
         'resolve': ['!kill'],
         'roles': [
-            Mafia()
+            Vanilla()
         ]
     },
     {
         'name':'test3',
-        'size': 3,
+        'minsize': 3,
+        'maxsize' : 6,
         'resolve': ['!kill'],
         'roles':[
+            Mafia(),
             Mafia()
         ]
     },
 
     {
         'name': 'test4',
-        'size': 2,
+        'minsize': 7,
+        'maxsize':11,
         'resolve': ['!kill'],
         'roles': [
+            Mafia(),
             Mafia()
         ]
     }]
@@ -46,7 +52,7 @@ setups = [{
 def select_setup(size):
     possible_setups = []
     for x in setups:
-        if size == x['size']:
+        if size >= x['minsize'] or size <= x['maxsize']:
             possible_setups.append(x)
     setup = random.choice(possible_setups)
     return setup
