@@ -1,3 +1,7 @@
 """Ignore this.  I just used this to test some functions quickly"""
-string = "@mafiabot kill you"
+
+dict = {"hey": 1,"you":0}
+for z in dict.keys():
+    print(z)
+
 

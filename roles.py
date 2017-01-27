@@ -9,11 +9,14 @@ class Vanilla(object):
         self.alliance = alliance
         self.resolve = alliance
         self.role = 'Vanilla'
-        self.day_actions = {'!vote': self.vote}
-        self.night_actions = {}
+        self.day_actions = {'!help':self.help, '!vote': self.vote, '!tally':None}
+        self.night_actions = {'!help': self.help}
+        self.check_input = {}
         self.resolve = None
+
     def get_role(self):
         return self.role
+
     def get_actions(self, **kwargs):
         '''Kwargs is used to get actions because other roles like role cop may be day/night
         cycle irrelevant, this makes it explicit.  If cycle is being passed, it is checking
@@ -33,10 +36,36 @@ class Vanilla(object):
                 Game.set_vote(user_name, target)
                 return user_name + " voted for: " + target, None
             else:
-                return "Please select an appropriate player", '@'+user_name
+                return "Please select an appropriate player", user_name
         except:
             print('select a correct player')
-            return "You need to select a correct player to vote for.", '@'+user_name
+            return "You need to select a player to vote for", user_name
+
+    def help(self, user_name, *args):
+        response = "Hey, you called?  You are " + self.alliance + " aligned \n"
+        response += "During the day you have the following actions "
+        for x in self.day_actions:
+            response += x + " "
+        response += "\nDuring the night you have the following actions "
+        for x in self.night_actions:
+            response += x + " "
+
+        return response, user_name
+
+class Doctor(Vanilla):
+
+    def __init__(self):
+        Vanilla.__init__(self)
+        self.role = "Doctor"
+        self.night_actions['!protect'] = self.protect
+        self.check_input['!protect'] = self.check_protect
+
+    def protect(self, target):
+        pass
+
+    def check_protect(self):
+        pass
+
 
 
 class Mafia(Vanilla):
@@ -45,8 +74,21 @@ class Mafia(Vanilla):
         Vanilla.__init__(self, 'mafia')
         self.role = 'Mafia'
         self.night_actions['!kill'] = self.kill
+        self.check_input['!kill'] = self.check_kill
 
-    def kill(self, target):
+    def check_kill(self,user,command, players):
+        try:
+            command[1]
+        except ValueError:
+            return "Please provide a user to kill."
+        if command[1] in players:
+            return command[1]
+        else:
+            return "Please return a valid player to kill.  Make sure you spelled their name correctly."
+
+
+    def kill(self, target, prevented, protected):
+
         return target
         #if called updates game...needs to be queued
 

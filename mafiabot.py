@@ -6,7 +6,7 @@ from gameaction import handle_action
 from game import GameHandler
 
 
-BOT_ID = 'id goes here'
+BOT_ID = 'U3RC29X0A'
 
 #Constants
 AT_BOT = "<@" + BOT_ID + ">"
@@ -18,12 +18,13 @@ begin = '!begin'
 helpme = '!help'
 get_tally = '!tally'
 
+
 #gamelobby
 Lobby = GameLobby()
 id_name_hash = {}
 
 #instantiate slack and twilio
-slack_client = SlackClient("xoxp-127494970309-126729036129-130875317698-323e2f2e3f8672853d2bc36ddbadfefb")
+slack_client = SlackClient("xoxb-127410337010-vVAZLB5zXjLdIe4bQDJFGQYT")
 user_list = slack_client.api_call('users.list')
 
 #displays message to channel or user, or later on to a private mafia channel
@@ -85,9 +86,12 @@ def handle_command(command, channel, Lobby, user_name, user_id):
     """
     response = "Not sure what you mean. Use the *" + EXAMPLE_COMMAND + \
                "* command with numbers, delimited by spaces."
-    if command.startswith((EXAMPLE_COMMAND, start_game, join_game, 'sexy')):
-        if command.startswith(EXAMPLE_COMMAND):
-            response = "Sure...write some more code then I can do that!"
+    if command.startswith((helpme, start_game, join_game, '!sexy', '!wizzy')):
+        if command.startswith(helpme):
+            response = "Need help?  Here's a list of commands \n" \
+                       "Begin a game by typing: !start \n" \
+                       "Join a game that has begun by typing: !join \n" \
+                       "Once enough people have joined start the game by typing: !begin"
         elif command.startswith(start_game):
             if Lobby.get_game_state() == 0:
                 response = user_name + " has begun a game.  Type '!join' to join!"
@@ -101,14 +105,24 @@ def handle_command(command, channel, Lobby, user_name, user_id):
                 response = "Game already in progress"
 
         elif command.startswith(join_game):
-            response = Lobby.add_player(user_name,user_id)
-            if len(Lobby.game_lobby) >= 1:
-                Lobby.set_game_state(2)
-        elif command.startswith('sexy'):
+            if Lobby.get_game_state() >= 1:
+                response = Lobby.add_player(user_name,user_id)
+                if len(Lobby.game_lobby) >= 1:
+                    Lobby.set_game_state(2)
+            elif Lobby.get_game_state() == 0:
+                response = "Please type !start to begin a game before joining."
+        elif command.startswith('!sexy'):
             response = "Aristocatt is way more attractive than " + user_name
+        elif command.startswith('!wizzy'):
+            response = "Wizzy: \n" \
+                       "1: A pussy/vagina--typically only refers to a desirable one. \n" \
+                       "2: Some girls feel awkward when you say 'pussy' in front of them, thus this term has been created to give 'pussy' a funner, more relaxed, and chiller connotation. Fun girls tend to get horny upon hearing the word. \n" \
+                       "3: Not just any pussy, a pussy that you really want to be in (Thus, the term can even be used to describe the girl as a whole)."
         message(response)
+
+
     else:
-        message('You used an incorrect action, type "@mafiabot !help" for a list '
+        message('You used an incorrect action, type "!help" for a list '
                        'of actions')
 
 
@@ -161,7 +175,10 @@ if __name__ == "__main__":
                     if Game.period == False:
                         kill = Game.resolve_action()
                         message("It is now day time the result of the night actions were: \n")
-                        message(kill + 'is dead')
+                        try:
+                            message(kill + 'is dead')
+                        except TypeError:
+                            message("No one was killed")
                         if kill in Lobby.get_lobby():
                             Lobby.remove_player(kill)
                     elif Game.period == True:
@@ -174,13 +191,15 @@ if __name__ == "__main__":
                     else: message("Houston we have a problem")
                     winner = check_game(Lobby)
                     if winner in ('Town','Mafia'):
-                        message("Congradulation:" + winner + "you have won.  Gamestate is resetting")
+                        message("Congratulations: " + winner + " you have won.  Resetting Game and Lobby")
                         Lobby.clear_lobby()
+
 
                     Game.set_cycle(not Game.period)
                     time.sleep(1)
-                    if Lobby.get_game_state() == 0:
+                    if Lobby.get_lobby() == None:
                         del Game
+
 
             command, channel, user_id = parse_slack_output(slack_client.rtm_read())
             if command and channel and user_id and Lobby.get_game_state() in (0, 1, 2):
@@ -200,12 +219,8 @@ if __name__ == "__main__":
                 id_hash = Lobby.get_hash()
                 if user_id in id_hash:
                     user_name = id_hash[user_id]
-                    if command.startswith((helpme, get_tally)):
-                        handle_basic(command,user_name)
-
-                    else:
-                        response, channel = handle_action(command, channel, Lobby, Game, user_name)
-                        message(response, channel)
+                    response, channel = handle_action(command, channel, Lobby, Game, user_name)
+                    message(response, channel)
 
             time.sleep(READ_WEBSOCKET_DELAY)
 

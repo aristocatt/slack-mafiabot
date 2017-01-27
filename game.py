@@ -26,9 +26,9 @@ class GameHandler:
     def set_cycle(self, cycle):
         self.period = cycle
         if cycle == True:
-            self.countdown = time.time() + 60 * 3
+            self.countdown = time.time() + 30  #set day time
         elif cycle == False:
-            self.countdown = time.time() + 60
+            self.countdown = time.time() + 30  #set night time
 
     def check_cycle(self):
         if time.time() > self.countdown:
@@ -59,6 +59,7 @@ class GameHandler:
             tally += x + " "
         tally += '\n'
         return tally, lynch
+
     def resolve_lynch(self):
         tally, lynch = self.tally_vote()
         tally += "Resolving lynch: \n"
@@ -68,9 +69,14 @@ class GameHandler:
 
     def queue_action(self,user, command, players, action):
         order = self.ord_of_op.index(command[0])
-        target = command.pop(0)
-        self.resolve[order] = [user, command[0], target, action]
-        print(self.resolve)
+        command_response = user.check_input[command[0]](user, command, players)
+        if command_response in players:
+            self.resolve[order] = [user, command[0], command_response, action]
+            return "Action recieved"
+        else:
+            return command_response
+
+
 
     def clear_queue(self):
         self.resolve = {}
@@ -85,14 +91,14 @@ class GameHandler:
         }
         for x in resolve:
             user = x[1][0]
-            action = user.night_actions
+            action = user.night_actions  #change to user.get_actions()
             print(action)
-            command = x[1][2]
+            command = x[1][1] #so ugly...needs to be explained
             print(command)
-            target = x[1][1]
+            target = x[1][2]
             print(target)
             kill = action[command](target)
-            return kill
+        return kill
 
 
 
