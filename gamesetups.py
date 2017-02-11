@@ -33,7 +33,6 @@ setups = [{
         'resolve': ['!kill'],
         'roles':[
             Mafia(),
-            Mafia()
         ]
     },
 
@@ -43,7 +42,6 @@ setups = [{
         'maxsize':11,
         'resolve': ['!kill'],
         'roles': [
-            Mafia(),
             Mafia()
         ]
     }]
@@ -52,8 +50,9 @@ setups = [{
 def select_setup(size):
     possible_setups = []
     for x in setups:
-        if size >= x['minsize'] or size <= x['maxsize']:
+        if size >= x['minsize'] and size <= x['maxsize']:
             possible_setups.append(x)
+    print(possible_setups)
     setup = random.choice(possible_setups)
     return setup
 

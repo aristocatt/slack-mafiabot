@@ -15,7 +15,7 @@ class GameHandler:
 
     def __init__(self, ord_of_op):
         self.period = True
-        self.countdown = time.time() + 30
+        self.countdown = time.time() + 120
         self.ord_of_op = ord_of_op
         self.vote = {}
         self.resolve = {
@@ -26,7 +26,7 @@ class GameHandler:
     def set_cycle(self, cycle):
         self.period = cycle
         if cycle == True:
-            self.countdown = time.time() + 30  #set day time
+            self.countdown = time.time() + 120  #set day time
         elif cycle == False:
             self.countdown = time.time() + 30  #set night time
 
@@ -98,7 +98,7 @@ class GameHandler:
             target = x[1][2]
             print(target)
             kill = action[command](target)
-        return kill
+            return kill
 
 
 

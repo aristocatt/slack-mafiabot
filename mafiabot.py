@@ -6,7 +6,7 @@ from gameaction import handle_action
 from game import GameHandler
 
 
-BOT_ID = 'bot id goes here'
+BOT_ID = 'U3RC29X0A'
 
 #Constants
 AT_BOT = "<@" + BOT_ID + ">"
@@ -16,7 +16,7 @@ join_game = '!join'
 vote = '!vote'
 begin = '!begin'
 helpme = '!help'
-get_tally = '!tally'
+get_count = '!count'
 
 
 #gamelobby
@@ -24,7 +24,7 @@ Lobby = GameLobby()
 id_name_hash = {}
 
 #instantiate slack and twilio
-slack_client = SlackClient("token goes here")
+slack_client = SlackClient("xoxb-127410337010-vyKjgSbxPB435otAwbp6mpZ4")
 user_list = slack_client.api_call('users.list')
 
 #displays message to channel or user, or later on to a private mafia channel
@@ -73,7 +73,7 @@ def game_exists(Lobby):
 def handle_basic(command ,user_name):
     if command.startswith(helpme):
         message("I am working on this.",user_name)
-    elif command.startswith(get_tally):
+    elif command.startswith(get_count):
         Game.tally_vote()
 
 
@@ -86,7 +86,7 @@ def handle_command(command, channel, Lobby, user_name, user_id):
     """
     response = "Not sure what you mean. Use the *" + EXAMPLE_COMMAND + \
                "* command with numbers, delimited by spaces."
-    if command.startswith((helpme, start_game, join_game, '!sexy', '!wizzy')):
+    if command.startswith((helpme, start_game, join_game, get_count, '!sexy', '!wizzy')):
         if command.startswith(helpme):
             response = "Need help?  Here's a list of commands \n" \
                        "Begin a game by typing: !start \n" \
@@ -111,6 +111,10 @@ def handle_command(command, channel, Lobby, user_name, user_id):
                     Lobby.set_game_state(2)
             elif Lobby.get_game_state() == 0:
                 response = "Please type !start to begin a game before joining."
+        elif command.startswith(get_count):
+            response = "Players currently in game queue: "
+            for x in Lobby.id_user_hash.values():
+                response += x + ' '
         elif command.startswith('!sexy'):
             response = "Aristocatt is way more attractive than " + user_name
         elif command.startswith('!wizzy'):
